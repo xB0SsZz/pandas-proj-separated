@@ -67,6 +67,7 @@ def main():
             # I just explained what happens for one of the args, but it's the exact same procedure for the other two
             for j in range(0, len(croped_df)):
                 if arg1 in str(croped_df.iloc[j][croped_df.columns[column]]):
+                    print("ARG1 matched")
                     # if arg1 is in row j and selected column, I store every value from this row in a list
                     row = list()
                     for k in range(0, len(croped_df.columns)):
@@ -79,6 +80,7 @@ def main():
                     if j not in rows_to_delete:
                         rows_to_delete.append(j)
                 if arg2 in str(croped_df.iloc[j][croped_df.columns[column]]):
+                    print("ARG2 matched")
                     row = list()
                     for k in range(0, len(croped_df.columns)):
                         row.append(croped_df.iloc[j][croped_df.columns[k]])
@@ -87,6 +89,7 @@ def main():
                     if j not in rows_to_delete:
                         rows_to_delete.append(j)
                 if arg3 in str(croped_df.iloc[j][croped_df.columns[column]]):
+                    print("ARG3 matched")
                     row = list()
                     for k in range(0, len(croped_df.columns)):
                         row.append(croped_df.iloc[j][croped_df.columns[k]])
