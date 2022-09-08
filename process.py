@@ -57,6 +57,7 @@ def main():
             for i in range(0, len(croped_df.columns)):
                 c = croped_df.columns[i]
                 if c.replace(" ", "") == col:
+                    print(f"Searching on column {col}")
                     column = i
             if column == 0:
                 print("No column named " + col)
@@ -71,6 +72,7 @@ def main():
                     for k in range(0, len(croped_df.columns)):
                         row.append(croped_df.iloc[j][croped_df.columns[k]])
                     # and here I assign the value of the row to the end of the output file
+                    print(f"Appending {row} to {output_file}.")
                     out_df.loc[len(out_df.index)] = row
                     # and finnally if this row isn't already in the array of rows to delete, I add it
                     # this row might be already in the array if chosen by other line of data_config_file.txt, so if taht is the case I don't add it to the array
@@ -80,6 +82,7 @@ def main():
                     row = list()
                     for k in range(0, len(croped_df.columns)):
                         row.append(croped_df.iloc[j][croped_df.columns[k]])
+                    print(f"Appending {row} to {output_file}.")
                     out_df.loc[len(out_df.index)] = row
                     if j not in rows_to_delete:
                         rows_to_delete.append(j)
@@ -87,10 +90,12 @@ def main():
                     row = list()
                     for k in range(0, len(croped_df.columns)):
                         row.append(croped_df.iloc[j][croped_df.columns[k]])
+                    print(f"Appending {row} to {output_file}.")
                     out_df.loc[len(out_df.index)] = row
                     if j not in rows_to_delete:
                         rows_to_delete.append(j)
             # when the output dataframe is complete, I save it using the writer I created before
+            print(f"{output_file} has {str(len(out_df))} rows")
             out_df.to_excel(writer, index=False, header=True)
             writer.save()
     
