@@ -5,10 +5,9 @@ import os
 import croped_delete
 
 
-def get_rows_to_delete(croped_df, writer, col, arg1, arg2, arg3):
-    pass
-
-def append_records(read_df, out_df, writer, col, arg1, arg2, arg3, rows_to_delete):
+def append_records(read_df, header, output_file, col, arg1, arg2, arg3, rows_to_delete):
+    out_df = pd.DataFrame(columns=header)
+    writer = pd.ExcelWriter(output_file, engine='xlsxwriter')
     # in this block of code I check if there is a column with the name specified in the data_config_file.txt
     column = 0
     for i in range(0, len(read_df.columns)):
@@ -97,14 +96,10 @@ def main():
 
                 if output_file in filenames:
                     read_df = pd.read_excel(output_file)
-                    out_df = pd.DataFrame(columns=header)
-                    writer = pd.ExcelWriter(output_file, engine='xlsxwriter')
-                    rows_to_delete = append_records(read_df, out_df, writer, col, arg1, arg2, arg3, rows_to_delete)
+                    rows_to_delete = append_records(read_df, header, output_file, col, arg1, arg2, arg3, rows_to_delete)
                 else:
-                    out_df = pd.DataFrame(columns=header)
                     filenames.append(output_file)
-                    writer = pd.ExcelWriter(output_file, engine='xlsxwriter')
-                    rows_to_delete = append_records(croped_df, out_df, writer, col, arg1, arg2, arg3, rows_to_delete)
+                    rows_to_delete = append_records(croped_df, header, output_file, col, arg1, arg2, arg3, rows_to_delete)
     
 
     # delete the rows (goes to croped_delete.py file)
