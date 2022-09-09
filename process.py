@@ -5,7 +5,53 @@ import os
 import croped_delete
 
 
+def get_rows_to_delete(croped_df, writer, col, arg1, arg2, arg3):
+    pass
 
+def append_records(read_df, out_df, writer, col, arg1, arg2, arg3, rows_to_delete):
+    # in this block of code I check if there is a column with the name specified in the data_config_file.txt
+    column = 0
+    for i in range(0, len(read_df.columns)):
+        c = read_df.columns[i]
+        if c.replace(" ", "") == col:
+            print(f"Searching on column {col}")
+            column = i
+    if column == 0:
+        print("No column named " + col)
+        return
+
+    # here starts the iteration through every row of example_croped.xlsx 
+    # I just explained what happens for one of the args, but it's the exact same procedure for the other two
+    for j in range(0, len(read_df)):
+        if arg1 in str(read_df.iloc[j][read_df.columns[column]]):
+            # if arg1 is in row j and selected column, I store every value from this row in a list
+            row = list()
+            for k in range(0, len(read_df.columns)):
+                row.append(read_df.iloc[j][read_df.columns[k]])
+            # and finnally if this row isn't already in the array of rows to delete, I add it to that and append the row to the output file
+            # this row might be already in the array if chosen by other line of data_config_file.txt, so if taht is the case I don't add it to the array
+            out_df.loc[len(out_df.index)] = row
+            if j not in rows_to_delete:
+                rows_to_delete.append(j)
+        if arg2 in str(read_df.iloc[j][read_df.columns[column]]):
+            row = list()
+            for k in range(0, len(read_df.columns)):
+                row.append(read_df.iloc[j][read_df.columns[k]])
+            out_df.loc[len(out_df.index)] = row
+            if j not in rows_to_delete:
+                rows_to_delete.append(j)
+        if arg3 in str(read_df.iloc[j][read_df.columns[column]]):
+            row = list()
+            for k in range(0, len(read_df.columns)):
+                row.append(read_df.iloc[j][read_df.columns[k]])
+            out_df.loc[len(out_df.index)] = row
+            if j not in rows_to_delete:
+                rows_to_delete.append(j)
+    
+    # when the output dataframe is complete, I save it using the writer I created before
+    out_df.to_excel(writer, index=False, header=True)
+    writer.save()
+    return rows_to_delete
 
 def main():
     # reading excel name from command line arguments
@@ -50,59 +96,15 @@ def main():
                 # if not, create a new dataframe
 
                 if output_file in filenames:
-                    out_df = pd.read_excel(output_file)
+                    read_df = pd.read_excel(output_file)
+                    out_df = pd.DataFrame(columns=header)
+                    writer = pd.ExcelWriter(output_file, engine='xlsxwriter')
+                    rows_to_delete = append_records(read_df, out_df, writer, col, arg1, arg2, arg3, rows_to_delete)
                 else:
                     out_df = pd.DataFrame(columns=header)
                     filenames.append(output_file)
-                    
-                # creating the writer to save to the output file
-                writer = pd.ExcelWriter(output_file, engine='xlsxwriter')
-
-                # in this block of code I check if there is a column with the name specified in the data_config_file.txt
-                column = 0
-                for i in range(0, len(croped_df.columns)):
-                    c = croped_df.columns[i]
-                    if c.replace(" ", "") == col:
-                        print(f"Searching on column {col}")
-                        column = i
-                if column == 0:
-                    print("No column named " + col)
-                    return
-
-                # here starts the iteration through every row of example_croped.xlsx 
-                # I just explained what happens for one of the args, but it's the exact same procedure for the other two
-                for j in range(0, len(croped_df)):
-                    if arg1 in str(croped_df.iloc[j][croped_df.columns[column]]):
-                        # if arg1 is in row j and selected column, I store every value from this row in a list
-                        row = list()
-                        for k in range(0, len(croped_df.columns)):
-                            row.append(croped_df.iloc[j][croped_df.columns[k]])
-                        # and finnally if this row isn't already in the array of rows to delete, I add it to that and append the row to the output file
-                        # this row might be already in the array if chosen by other line of data_config_file.txt, so if taht is the case I don't add it to the array
-                        if j not in rows_to_delete:
-                            out_df.loc[len(out_df.index)] = row
-                            rows_to_delete.append(j)
-                    if arg2 in str(croped_df.iloc[j][croped_df.columns[column]]):
-                        row = list()
-                        for k in range(0, len(croped_df.columns)):
-                            row.append(croped_df.iloc[j][croped_df.columns[k]])
-                        if j not in rows_to_delete:
-                            out_df.loc[len(out_df.index)] = row
-                            rows_to_delete.append(j)
-                    if arg3 in str(croped_df.iloc[j][croped_df.columns[column]]):
-                        row = list()
-                        for k in range(0, len(croped_df.columns)):
-                            row.append(croped_df.iloc[j][croped_df.columns[k]])
-                        if j not in rows_to_delete:
-                            out_df.loc[len(out_df.index)] = row
-                            rows_to_delete.append(j)
-
-
-                
-                # when the output dataframe is complete, I save it using the writer I created before
-                print(f"{output_file} has {str(len(out_df))} rows")
-                out_df.to_excel(writer, index=False, header=True)
-                writer.save()
+                    writer = pd.ExcelWriter(output_file, engine='xlsxwriter')
+                    rows_to_delete = append_records(croped_df, out_df, writer, col, arg1, arg2, arg3, rows_to_delete)
     
 
     # delete the rows (goes to croped_delete.py file)
