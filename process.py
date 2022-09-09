@@ -20,6 +20,8 @@ def main():
     # creating an array to store all the row indexes I will be deleting from example_croped.xlsx
     rows_to_delete = [-1]
 
+    filenames = list()
+
     # reading data_config_file.txt:
     with open('data_config_file.txt', 'r') as f:
         # iterating through all the lines in data_config_file.txt
@@ -46,10 +48,12 @@ def main():
                 
                 # checking if file already exists, if it does, the dataframe I will use will be from the already existing xlsx file
                 # if not, create a new dataframe
-                if os.path.exists(output_file):
+
+                if output_file in filenames:
                     out_df = pd.read_excel(output_file)
                 else:
                     out_df = pd.DataFrame(columns=header)
+                    filenames.append(output_file)
                     
                 # creating the writer to save to the output file
                 writer = pd.ExcelWriter(output_file, engine='xlsxwriter')
