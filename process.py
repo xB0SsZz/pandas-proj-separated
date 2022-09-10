@@ -24,26 +24,27 @@ def append_records(read_df, header, output_file, col, arg1, arg2, arg3, rows_to_
     for j in range(0, len(read_df)):
         if arg1 in str(read_df.iloc[j][read_df.columns[column]]):
             # if arg1 is in row j and selected column, I store every value from this row in a list
-            row = list()
+            row = {}
             for k in range(0, len(read_df.columns)):
-                row.append(read_df.iloc[j][read_df.columns[k]])
-            # and finnally if this row isn't already in the array of rows to delete, I add it to that and append the row to the output file
-            # this row might be already in the array if chosen by other line of data_config_file.txt, so if taht is the case I don't add it to the array
-            out_df.loc[len(out_df.index)] = row
+                row.update({f"{read_df.columns[k]}":read_df.iloc[j][read_df.columns[k]]})
+            update_df = pd.DataFrame(row, index=[0])
+            out_df = pd.concat([out_df, update_df], ignore_index=True)
             if j not in rows_to_delete:
                 rows_to_delete.append(j)
         if arg2 in str(read_df.iloc[j][read_df.columns[column]]):
-            row = list()
+            row = {}
             for k in range(0, len(read_df.columns)):
-                row.append(read_df.iloc[j][read_df.columns[k]])
-            out_df.loc[len(out_df.index)] = row
+                row.update({f"{read_df.columns[k]}":read_df.iloc[j][read_df.columns[k]]})
+            update_df = pd.DataFrame(row, index=[0])
+            out_df = pd.concat([out_df, update_df], ignore_index=True)
             if j not in rows_to_delete:
                 rows_to_delete.append(j)
         if arg3 in str(read_df.iloc[j][read_df.columns[column]]):
-            row = list()
+            row = {}
             for k in range(0, len(read_df.columns)):
-                row.append(read_df.iloc[j][read_df.columns[k]])
-            out_df.loc[len(out_df.index)] = row
+                row.update({f"{read_df.columns[k]}":read_df.iloc[j][read_df.columns[k]]})
+            update_df = pd.DataFrame(row, index=[0])
+            out_df = pd.concat([out_df, update_df], ignore_index=True)
             if j not in rows_to_delete:
                 rows_to_delete.append(j)
     
