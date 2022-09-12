@@ -19,7 +19,7 @@ def append_records(read_df, header, output_file, col, arg1, arg2, arg3, rows_to_
         print("No column named " + col)
         return
 
-    # here starts the iteration through every row of example_croped.xlsx 
+    # here starts the iteration through every row of example_croped.xlsx
     # I just explained what happens for one of the args, but it's the exact same procedure for the other two
     for j in range(0, len(read_df)):
         if arg1 in str(read_df.iloc[j][read_df.columns[column]]):
@@ -47,7 +47,7 @@ def append_records(read_df, header, output_file, col, arg1, arg2, arg3, rows_to_
             out_df = pd.concat([out_df, update_df], ignore_index=True)
             if j not in rows_to_delete:
                 rows_to_delete.append(j)
-    
+
     # when the output dataframe is complete, I save it using the writer I created before
     out_df.to_excel(writer, index=False, header=True)
     writer.save()
@@ -80,18 +80,18 @@ def main():
                 arg2 = (line.partition("|")[2].partition("|")[2].partition("|")[2].partition("|")[0])
                 arg3 = (line.partition("|")[2].partition("|")[2].partition("|")[2].partition("|")[2].partition("|")[0])
 
-                # removing spaces from the strings
-                output_file = output_file.replace(" ", "")
-                col = col.replace(" ", "")
-                arg1 = arg1.replace(" ", "")
-                arg2 = arg2.replace(" ", "")
-                arg3 = arg3.replace(" ", "")
+                # removing spaces from the end and the start of the strings
+                output_file = output_file.strip()
+                col = col.strip()
+                arg1 = arg1.strip()
+                arg2 = arg2.strip()
+                arg3 = arg3.strip()
                 arg3 = arg3.replace("\n", "")
 
                 print("---------------------------------------------------")
                 print("Saving on file |" + output_file + "|")
                 print("Searching on column |" + col + "| for |" + arg1 + "|" + arg2 + "|" + arg3 + "|")
-                
+
                 # checking if file already exists, if it does, the dataframe I will use will be from the already existing xlsx file
                 # if not, create a new dataframe
 
@@ -101,11 +101,11 @@ def main():
                 else:
                     filenames.append(output_file)
                     rows_to_delete = append_records(croped_df, header, output_file, col, arg1, arg2, arg3, rows_to_delete)
-    
+
 
     # delete the rows (goes to croped_delete.py file)
     croped_delete.delete_rows(excel_name, rows_to_delete)
-            
+
 
 
 
