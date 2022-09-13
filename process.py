@@ -21,7 +21,7 @@ def append_records(read_df, header, output_file, col, arg1, arg2, arg3, rows_to_
     column = 0
     for i in range(0, len(read_df.columns)):
         c = read_df.columns[i]
-        if c.replace(" ", "") == col:
+        if str(c.replace(" ", "")).lower() == str(col).lower():
             print(f"Searching on column {col}")
             column = i
     if column == 0:
