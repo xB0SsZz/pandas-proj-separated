@@ -12,9 +12,9 @@ def append_records(read_df, header, output_file, col, arg1, arg2, arg3, rows_to_
         args.append(arg1)
     if arg2 != "NULL":
         args.append(arg2)
-    if arg2 != "NULL":
-        args.append(arg2)
-
+    if arg3 != "NULL":
+        args.append(arg3)
+        
     out_df = pd.DataFrame(columns=header)
     writer = pd.ExcelWriter(output_file, engine='xlsxwriter')
     # in this block of code I check if there is a column with the name specified in the data_config_file.txt
