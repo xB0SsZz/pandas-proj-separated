@@ -16,7 +16,6 @@ def delete_rows(excel_name, rows_to_delete):
     # if you notice, I only go until len(rows_to_delete) - 1
     # that's because I initialized the array with [-1], so the last value, as it is in descending order, will be -1, and there is no row -1
     for i in range(0, len(rows_to_delete) - 1):
-        print("deleting row " + str(rows_to_delete[i]))
         df.drop(labels=rows_to_delete[i], axis=0, inplace=True)
 
     # finnally, saving the croped file without the rows I deleted using it's writer
