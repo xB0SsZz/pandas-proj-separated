@@ -33,9 +33,7 @@ def append_records(read_df, header, output_file, col, arg1, arg2, arg3, rows_to_
     for j in range(0, len(read_df)):
         flag = True
         for a in range(0, len(args)):
-            if str(args[a]).lower() in str(read_df.iloc[j][read_df.columns[column]]).lower():
-                flag = True
-            else:
+            if not str(args[a]).lower() in str(read_df.iloc[j][read_df.columns[column]]).lower():
                 flag = False
         if flag:
             # if arg1 is in row j and selected column, I store every value from this row in a list
