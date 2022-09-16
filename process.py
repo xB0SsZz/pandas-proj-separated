@@ -7,13 +7,23 @@ import croped_delete
 
 def append_records(read_df, header, output_file, col, arg1, arg2, arg3, rows_to_delete):
 
-    args = list()
+    args_search = list()
+    args_avoid = list()
     if arg1 != "NULL":
-        args.append(arg1)
+        if str(arg1).startswith("!"):
+            args_avoid.append(arg1[1:])
+        else:
+            args_search.append(arg1)
     if arg2 != "NULL":
-        args.append(arg2)
+        if str(arg2).startswith("!"):
+            args_avoid.append(arg2[1:])
+        else:
+            args_search.append(arg2)
     if arg3 != "NULL":
-        args.append(arg3)
+        if str(arg3).startswith("!"):
+            args_avoid.append(arg3[1:])
+        else:
+            args_search.append(arg3)
         
     out_df = pd.DataFrame(columns=header)
     writer = pd.ExcelWriter(output_file, engine='xlsxwriter')
@@ -32,8 +42,11 @@ def append_records(read_df, header, output_file, col, arg1, arg2, arg3, rows_to_
     # I just explained what happens for one of the args, but it's the exact same procedure for the other two
     for j in range(0, len(read_df)):
         flag = True
-        for a in range(0, len(args)):
-            if not str(args[a]).lower() in str(read_df.iloc[j][read_df.columns[column]]).lower():
+        for a in range(0, len(args_search)):
+            if not str(args_search[a]).lower() in str(read_df.iloc[j][read_df.columns[column]]).lower():
+                flag = False
+        for b in range(0, len(args_avoid)):
+            if str(args_avoid[b]).lower() in str(read_df.iloc[j][read_df.columns[column]]).lower():
                 flag = False
         if flag:
             # if arg1 is in row j and selected column, I store every value from this row in a list
